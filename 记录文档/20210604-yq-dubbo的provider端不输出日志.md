@@ -141,7 +141,7 @@
 
   #### SLF4J适配层
 
-  ![image-20210627145939601](.\img\image-20210627145939601.png)
+  ![image-20210627145939601](./img/image-20210627145939601.png)
 
   **slf4j默认实现是logback，如果要使用 log4j 和 java.util.logging 作为 slf4j 的实现，就需要一个适配层，在 slf4j 的项目中，slf4j-log4j12 和 slf4j-jdk14 就是该适配层。其实该适配层的核心思想就是设计模式中的适配器模式。本节以 slf4j-log4j12 模块来说明。**
    final transient org.apache.log4j.Logger logger;  实际代理了org.apache.log4j.Logger类,所以对Log4jLoggerAdapter的所有方法调用,最终调用的都是org.apache.log4j.Logger对应的方法
