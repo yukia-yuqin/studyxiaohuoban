@@ -93,7 +93,7 @@ beanFactory有**存放bean，生成bean**的功能，但它只是一个接口，
 
 因为**启动spring就是创建beanFactory，然后扫描bean的定义，拿到beanFactory，创建bean，再通过beanFactory拿到bean**。
 
-![](D:\data\studyxiaohuoban\记录文档\img\image-20210515151624917.png)
+![](.\img\image-20210515151624917.png)
 
 ### 模板模式
 
@@ -112,9 +112,9 @@ beanFactory有**存放bean，生成bean**的功能，但它只是一个接口，
    invokeBeanFactoryPostProcessors(postProcessors,beanFactory), 这里调用所有bf的后置处理器，此时会调用BeanDefinitionRegistryPostProcessor接口，该接口只有ConfigurationClassPostProcessor一个默认实现类，使用这个postProcessor类的postProcessBeanFactory方法会调用enhanceConfigurationClass()方法
    ```
 
-   ![image-20210515175739813](D:\data\studyxiaohuoban\记录文档\img\image-20210515175739813.png)
+   ![image-20210515175739813](.\img\image-20210515175739813.png)
 
-   ![image-20210515175528043](D:\data\studyxiaohuoban\记录文档\img\image-20210515175528043.png)
+   ![image-20210515175528043](.\img\image-20210515175528043.png)
 
 2. 调用到enhanceConfigurationClass() ，此方法获取registry里面的所有类，遍历判断实例化的bean是否是有@configuration注解，如果有则存到一个map中，为lite则不存，若map为null ，则返回之后直接new 对象；若map 不为null，则去完成cglib代理的实现。
 
@@ -125,7 +125,7 @@ beanFactory有**存放bean，生成bean**的功能，但它只是一个接口，
    configBeanDefs.put(beanName, (AbstractBeanDefinition) beanDef);  存到一个map中。
    ```
 
-   ![image-20210515180237571](D:\data\studyxiaohuoban\记录文档\img\image-20210515180237571.png)
+   ![image-20210515180237571](.\img\image-20210515180237571.png)
 
 3. `cglib`代理的实现：调用`enhance()` ，判断该类是否实现`EnhancedConfiguration` ，完成代理则会让该类去实现此接口；若没有被代理则去实现代理 `enhancer.create()`创建代码对象。**BeanMethodInterceptor会根据方法名去IOC找到Bean并返回**。详解见[BeanMethodInterceptor][BeanMethodInterceptor] 。如果不增强的情况下，@Bean方法A希望在创建A的过程中调用@Bean方法B作为自身属性，那么必然是一个new的新对象B，无法保证单例B的存在**，所以cglib后就是为了增加额外的判断保证单例**
 
@@ -134,9 +134,9 @@ beanFactory有**存放bean，生成bean**的功能，但它只是一个接口，
    newEnhancer()中有BeanMethodInterceptor()方法来增强@Configuration类，BeanMethodInterceptor会根据方法名去IOC找到Bean并返回。
    ```
 
-   ![image-20210515181633163](D:\data\studyxiaohuoban\记录文档\img\image-20210515181633163.png)
+   ![image-20210515181633163](.\img\image-20210515181633163.png)
 
-    ![image-20210515190029647](D:\data\studyxiaohuoban\记录文档\img\image-20210515190029647.png)
+    ![image-20210515190029647](.\img\image-20210515190029647.png)
 
 
 
